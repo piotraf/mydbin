@@ -42,3 +42,28 @@ chmod +x scripts/mydbinstance.sh
 
 # First-time configuration
 scripts/mydbinstance.sh --initialize_config
+```
+You will be asked for:
+	•	instance root (default: ~/testdir)
+	•	MySQL binaries location (default: /opt/mysqlbin)
+```
+# List all instances
+scripts/mydbinstance.sh --list
+
+# Create a new instance
+scripts/mydbinstance.sh --create <name>
+
+# Initialize data directory (generic)
+scripts/mydbinstance.sh --initialize <name>
+
+# Initialize for specific versions
+scripts/mydbinstance.sh --initialize_55 <name>
+scripts/mydbinstance.sh --initialize_56 <name>
+
+# Start / stop
+scripts/mydbinstance.sh --start <name>
+scripts/mydbinstance.sh --stop <name>
+
+# Destroy (remove data + rc)
+scripts/mydbinstance.sh --destroy <name>
+```
