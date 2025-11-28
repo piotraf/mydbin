@@ -1,137 +1,81 @@
 # mydbin — Product Pitch
 
-## Summary
-mydbin is a lightweight, user-space MySQL/MariaDB sandbox that allows developers,
-DBAs, and QA teams to create fast, isolated, disposable database instances across
-multiple versions — without Docker, VMs, or root privileges.
-
-It is effectively ***“pyenv for MySQL/MariaDB instances.”***
+## Overview
+mydbin is a rootless MySQL/MariaDB sandbox enabling developers and QA teams to
+create fast, isolated, disposable database instances across multiple versions.
+It removes the need for Docker, VMs, root privileges, or manual installations.
 
 ---
 
 ## Problem
-Modern backend systems run on multiple versions of MySQL and MariaDB.  
-Teams need to:
+Teams frequently face:
+- Inability to run multiple DB versions locally
+- Corporate restrictions blocking Docker or root access
+- Slow debugging of production issues
+- Inconsistent local vs CI test environments
+- Heavy manual setup for MySQL/MariaDB testing
 
-- reproduce production issues quickly  
-- test across versions (5.5 → 8.4 / MariaDB 10.x → 11.x)  
-- build CI pipelines requiring clean disposable DBs  
-- work in environments where Docker or root access is restricted  
-
-Today, engineers resort to:
-- manual installs
-- complex Docker images
-- dedicated shared test servers
-- heavyweight VMs  
-These slow down debugging, complicate testing, and often fail under corporate security constraints.
+The result: slow development, difficult bug reproduction, and limited testing.
 
 ---
 
 ## Solution
 mydbin provides:
-
-- fully isolated database instances created in seconds
-- works entirely under a normal user account (`$HOME`)
-- supports multiple MySQL/MariaDB versions living side-by-side
-- clean create → initialize → start → stop → destroy lifecycle
-- optional import of existing datadirs
-- predictable behavior suitable for CI pipelines
-
-No root, no containers, no system packages.
+- fully isolated per-instance directories (data, logs, socket, PID)
+- one-command lifecycle management
+- multi-version support (5.5 → 8.4 / MariaDB 10.x → 11.x)
+- pure user-space operation (no root, no containers)
+- reproducible environments suitable for CI
 
 ---
 
-## Why now?
-- MySQL 8.4 and MariaDB 11.x introduce behavioural differences requiring
-  cross-version testing.
-- Many corporate laptops forbid Docker or local root access.
-- Developers increasingly need to reproduce production issues locally in
-  seconds, not hours.
-- QA and CI environments need ephemeral, version-pinned databases.
-
-mydbin directly meets these needs with a minimal, portable approach.
+## Why now
+- MySQL 8.4 LTS and MariaDB 11.x create new compatibility challenges
+- Enterprises increasingly restrict Docker and local admin rights
+- Developer toolchains are shifting toward lightweight, portable solutions
+- CI/CD pipelines need deterministic databases for automated testing
 
 ---
 
-## Target users
-- **Developers** building against MySQL/MariaDB
-- **DBAs** needing fast repro environments
-- **QA teams** running multi-version regression tests
-- **CI/CD pipelines** requiring short-lived database instances
+## Users
+- Developers building against MySQL/MariaDB
+- DBAs performing repro and upgrade tests
+- QA teams running cross-version regression suites
+- CI pipeline maintainers needing ephemeral databases
 
 ---
 
-## Competitive landscape
-Alternatives:
-- Docker-based DB containers  
-- Dedicated test servers  
-- Local manual installs  
-- Heavyweight VM appliances  
+## Competitive Edge
+Unlike Docker images or VMs, mydbin is:
+- rootless
+- lightweight
+- version-flexible
+- predictable
+- easy to embed into scripts
 
-mydbin differentiates itself by being:
-- **rootless**
-- **lighter than Docker**
-- **fully local**
-- **version-flexible**
-- **CI-friendly**
-
-There is no equivalent “multi-version MySQL/MariaDB sandbox manager” today.
+It fills a gap in developer tooling: **no existing tool provides “pyenv-style” DB sandboxes.**
 
 ---
 
-## Business potential
-Initial product → CLI dev tool.  
-Expansion opportunities:
+## Traction & Roadmap
+**Prototype:**  
+`scripts/mydbinstance.sh` implements full instance lifecycle.
 
-1. **Pro tier**  
-   - downloadable verified server binaries  
-   - automated version management  
-   - team policies  
-   - workspace sync  
-   - environment templates  
-
-2. **Enterprise tier**  
-   - SSO/SSO, audit logs  
-   - centralized policy controls  
-   - buildfarm integrations  
-
-3. **Cloud Connect (future)**  
-   - connect local ephemeral DBs to cloud clusters  
-   - managed dataset snapshots for dev environments  
-
-The entry point is intentionally small and developer-friendly.  
-The extension path is broad, powerful, and monetizable.
+**Next milestones:**
+- v0.1: Document and harden current script  
+- v0.2: Introduce `mydbin` front-end CLI  
+- v0.3: Version manager  
+- v0.4: Environments  
+- v0.5: CI-ready usage  
+- v1.0: Stable CLI contract  
 
 ---
 
-## Traction and roadmap
-**Current working prototype:**
-- `scripts/mydbinstance.sh` managing multi-version MySQL instances
-- instance lifecycle: create → init → start → stop → destroy
-- fully documented roadmap and architecture
-- designed around *no-root* principle and user-space isolation
+## Long-term potential
+- Verified binary distribution  
+- Developer experience enhancements  
+- Team collaboration features  
+- Enterprise policies and audit  
+- Commercial support  
 
-**Next 6–12 months:**
-- `mydbin` unified CLI
-- version management (install/register MySQL/MariaDB)
-- environment switching
-- CI-ready usage
-- optional analytics/telemetry for insight
-
-**Long-term:**
-- developer platform for MySQL/MariaDB testing
-- enterprise-ready features
-- commercial support offerings
-
----
-
-## Why mydbin fits Microsoft for Startups
-- Targets a massive existing ecosystem (MySQL + MariaDB developers)
-- Solves a practical pain in enterprise environments
-- Lightweight tech → fast adoption, low friction
-- Clear upgrade path from open-source tool → paid team features
-- Strong fit for CI/CD and cloud workflows
-- Small, focused MVP with realistic expansion runway
-
-mydbin aligns well with the Founders Hub goal:  
-**supporting early-stage, high-leverage developer tooling.**
+mydbin begins as a small, powerful CLI and grows into a full developer platform.
