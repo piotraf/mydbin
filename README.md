@@ -1,9 +1,15 @@
 # mydbin
 
 mydbin is a user-space sandbox for running multiple isolated MySQL and MariaDB
-instances side-by-side without requiring root privileges. It is designed for
-developers, DBAs and QA engineers who need fast, disposable database
-environments for testing, debugging or CI pipelines.
+instances side-by-side without root privileges. It is designed for developers,
+DBAs and QA engineers who need fast, disposable database environments for
+testing, debugging or CI pipelines.
+
+The tool creates a full instance directory layout (datadir, binlogs, tmp,
+socket, PID, logs, and a dedicated my.cnf). You can either initialize a fresh
+empty database or import an existing datadir. Once created, each instance can be
+started, stopped and destroyed independently, with all state stored under the
+user’s home directory.
 
 Current implementation is a prototype Bash script:
 `scripts/mydbinstance.sh` (marked EXPERIMENTAL / WIP). Future releases will
