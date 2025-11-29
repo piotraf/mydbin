@@ -53,10 +53,10 @@ scripts/mydbinstance.sh --list
 # Create a new instance
 scripts/mydbinstance.sh --create <name>
 
-# Initialize data directory (generic)
+# Initialize data directory (>=5.7)
 scripts/mydbinstance.sh --initialize <name>
 
-# Initialize for specific versions
+# Initialize for old specific versions
 scripts/mydbinstance.sh --initialize_55 <name>
 scripts/mydbinstance.sh --initialize_56 <name>
 
