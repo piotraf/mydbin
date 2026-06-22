@@ -14,18 +14,12 @@ jobs:
     steps:
       - name: Write Containerfile on citest01
         run: |
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'mkdir -p ~/mysqlrun && cat > ~/mysqlrun/Containerfile <<CF
-FROM ubuntu:22.04
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y libaio1 libncurses5 libtinfo5 libnuma1 zlib1g libssl3 xz-utils && rm -rf /var/lib/apt/lists/*
-CF'
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'mkdir -p ~/mysqlrun && printf "%s\n" "FROM ubuntu:22.04" "ENV DEBIAN_FRONTEND=noninteractive" "RUN apt-get update && apt-get install -y libaio1 libncurses5 libtinfo5 libnuma1 zlib1g libssl3 xz-utils && rm -rf /var/lib/apt/lists/*" > ~/mysqlrun/Containerfile && cat ~/mysqlrun/Containerfile'
 
       - name: Build image
         run: |
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
-            "podman build -t $IMAGE ~/mysqlrun"
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman build -t $IMAGE ~/mysqlrun"
 
-      - name: Verify image + libs
+      - name: Verify image and libs
         run: |
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
-            "podman images $IMAGE && podman run --rm $IMAGE sh -c 'ldconfig -p | grep -E \"libaio|libtinfo|libncurses|libnuma\"'"
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman images $IMAGE && podman run --rm $IMAGE sh -c 'ldconfig -p | grep -E \"libaio|libtinfo|libncurses|libnuma\"'"
