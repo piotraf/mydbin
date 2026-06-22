@@ -1,0 +1,31 @@
+name: Build MySQL Runner Image
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+  IMAGE: "mysql-runner:base"
+
+jobs:
+  build:
+    runs-on: [self-hosted]
+    steps:
+      - name: Write Containerfile on citest01
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'mkdir -p ~/mysqlrun && cat > ~/mysqlrun/Containerfile <<CF
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y libaio1 libncurses5 libtinfo5 libnuma1 zlib1g libssl3 xz-utils && rm -rf /var/lib/apt/lists/*
+CF'
+
+      - name: Build image
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman build -t $IMAGE ~/mysqlrun"
+
+      - name: Verify image + libs
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman images $IMAGE && podman run --rm $IMAGE sh -c 'ldconfig -p | grep -E \"libaio|libtinfo|libncurses|libnuma\"'"
