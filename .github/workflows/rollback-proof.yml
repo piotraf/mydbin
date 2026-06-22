@@ -1,0 +1,52 @@
+name: Rollback Proof (citest01)
+
+on:
+  workflow_dispatch:
+
+env:
+  PVE_HOST: "192.168.99.2"
+  PVE_NODE: "enterprise"
+  PVE_TOKEN_ID: "ci-gh@pve!ghr01"
+  VMID: "240020"
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+
+jobs:
+  rollback-proof:
+    runs-on: [self-hosted]
+    steps:
+      - name: Dirty the VM (create marker)
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            'touch /tmp/dirty-marker && ls -l /tmp/dirty-marker'
+
+      - name: Rollback to golden snapshot
+        run: |
+          curl -sk -X POST \
+            -H "Authorization: PVEAPIToken=${PVE_TOKEN_ID}=${{ secrets.PVE_TOKEN }}" \
+            "https://${PVE_HOST}:8006/api2/json/nodes/${PVE_NODE}/qemu/${VMID}/snapshot/clean/rollback"
+          sleep 10
+
+      - name: Start VM
+        run: |
+          curl -sk -X POST \
+            -H "Authorization: PVEAPIToken=${PVE_TOKEN_ID}=${{ secrets.PVE_TOKEN }}" \
+            "https://${PVE_HOST}:8006/api2/json/nodes/${PVE_NODE}/qemu/${VMID}/status/start"
+
+      - name: Wait for SSH
+        run: |
+          for i in $(seq 1 60); do
+            if ssh -i "$CI_KEY" -o StrictHostKeyChecking=no -o ConnectTimeout=3 ci@$TEST_IP true 2>/dev/null; then
+              echo "up after $i tries"; exit 0
+            fi
+            sleep 5
+          done
+          echo "did not come up"; exit 1
+
+      - name: Assert marker gone (rollback worked)
+        run: |
+          if ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'test -e /tmp/dirty-marker'; then
+            echo "FAIL: marker still present, rollback did not restore golden"; exit 1
+          else
+            echo "PASS: marker absent, VM restored to golden snapshot"
+          fi
