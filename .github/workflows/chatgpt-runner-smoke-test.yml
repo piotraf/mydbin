@@ -1,0 +1,17 @@
+name: chatgpt-runner-smoke-test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/chatgpt-runner-smoke-test.yml'
+
+jobs:
+  create-test-file:
+    runs-on: self-hosted
+    steps:
+      - name: Create /tmp/test.txt
+        run: |
+          printf '%s\n' 'hello from chatgpt' > /tmp/test.txt
+          ls -l /tmp/test.txt
+          cat /tmp/test.txt
