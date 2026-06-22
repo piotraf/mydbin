@@ -25,14 +25,15 @@ jobs:
             "podman run --rm -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE bash -c '
               set -euo pipefail
               export USER=runner
+              MYDB=\"bash /usr/local/bin/mydbinstance.sh\"
               VER=mysql-5.6.51-linux-glibc2.12-x86_64
               mkdir -p /var/tmp/mysqlbin /var/tmp/mydb ~/.mydbinstancerc.d
               tar xf /ci/mysql/\$VER.tar.gz -C /var/tmp/mysqlbin
               printf \"MYROOTPATH=/var/tmp/mydb\nMYBINPATH=/var/tmp/mysqlbin\n\" > ~/.mydbinstancerc
-              printf \"2\n\" | mydbinstance.sh --create ci56
-              mydbinstance.sh --initialize_56 ci56
-              mydbinstance.sh --start ci56
+              printf \"2\n\" | \$MYDB --create ci56
+              \$MYDB --initialize_56 ci56
+              \$MYDB --start ci56
               /var/tmp/mysqlbin/\$VER/bin/mysql --defaults-file=/var/tmp/mydb/ci56/ci56.cnf -uroot -N -e \"SELECT VERSION();\"
-              mydbinstance.sh --stop ci56
-              mydbinstance.sh --destroy ci56
+              \$MYDB --stop ci56
+              \$MYDB --destroy ci56
             '"
