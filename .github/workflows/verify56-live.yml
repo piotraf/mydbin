@@ -19,12 +19,13 @@ jobs:
         run: |
           scp -i "$CI_KEY" -o StrictHostKeyChecking=no scripts/mydbinstance.sh ci@$TEST_IP:/tmp/mydbinstance.sh
 
-      - name: Start persistent container + 5.6 instance, hold 5 min
+      - name: Start container + 5.6 instance, hold 5 min
         run: |
+          CNAME="my56-${GITHUB_RUN_ID}"
           ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
-            "podman rm -f my56 2>/dev/null || true; podman run -d --name my56 -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE sleep 600"
+            "podman run -d --name $CNAME -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE sleep 600"
           ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
-            "podman exec my56 bash -lc '
+            "podman exec $CNAME bash -lc '
               set -euo pipefail
               MYDB=\"bash /usr/local/bin/mydbinstance.sh\"
               VER=mysql-5.6.51-linux-glibc2.12-x86_64
@@ -35,6 +36,9 @@ jobs:
               \$MYDB --initialize_56 my56
               \$MYDB --start my56
             '"
-          echo "instance live in container my56 for 300s"
+          echo "============================================================"
+          echo "LIVE. Log in from alita (within 5 min):"
+          echo "ssh -i ~/macalita/.ssh/ghr01_localadm localadm@192.168.40.10 -t 'sudo -u actions ssh -i /opt/actions-runner/.ssh/ci_citest -o StrictHostKeyChecking=no -t ci@192.168.40.20 \"podman exec -it $CNAME bash -l\"'"
+          echo "============================================================"
           sleep 300
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman rm -f my56 || true"
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman rm -f $CNAME || true"
