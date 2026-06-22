@@ -1,0 +1,40 @@
+name: Verify56 Live (5min)
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+  IMAGE: "mysql-runner:base"
+
+jobs:
+  live:
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy mydbinstance.sh to citest01
+        run: |
+          scp -i "$CI_KEY" -o StrictHostKeyChecking=no scripts/mydbinstance.sh ci@$TEST_IP:/tmp/mydbinstance.sh
+
+      - name: Start persistent container + 5.6 instance, hold 5 min
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman rm -f my56 2>/dev/null || true; podman run -d --name my56 -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE sleep 600"
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman exec my56 bash -lc '
+              set -euo pipefail
+              MYDB=\"bash /usr/local/bin/mydbinstance.sh\"
+              VER=mysql-5.6.51-linux-glibc2.12-x86_64
+              mkdir -p /var/tmp/mysqlbin /var/tmp/mydb ~/.mydbinstancerc.d
+              tar xf /ci/mysql/\$VER.tar.gz -C /var/tmp/mysqlbin
+              printf \"MYROOTPATH=/var/tmp/mydb\nMYBINPATH=/var/tmp/mysqlbin\n\" > ~/.mydbinstancerc
+              printf \"2\n\" | \$MYDB --create my56
+              \$MYDB --initialize_56 my56
+              \$MYDB --start my56
+            '"
+          echo "instance live in container my56 for 300s"
+          sleep 300
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman rm -f my56 || true"
