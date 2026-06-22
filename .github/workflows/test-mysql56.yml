@@ -1,0 +1,38 @@
+name: Test MySQL 5.6 (mydbinstance)
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+  IMAGE: "mysql-runner:base"
+
+jobs:
+  test56:
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy mydbinstance.sh to citest01
+        run: |
+          scp -i "$CI_KEY" -o StrictHostKeyChecking=no scripts/mydbinstance.sh ci@$TEST_IP:/tmp/mydbinstance.sh
+
+      - name: Run 5.6 cycle in container
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman run --rm -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE bash -c '
+              set -euo pipefail
+              export USER=runner
+              VER=mysql-5.6.51-linux-glibc2.12-x86_64
+              mkdir -p /var/tmp/mysqlbin /var/tmp/mydb ~/.mydbinstancerc.d
+              tar xf /ci/mysql/\$VER.tar.gz -C /var/tmp/mysqlbin
+              printf \"MYROOTPATH=/var/tmp/mydb\nMYBINPATH=/var/tmp/mysqlbin\n\" > ~/.mydbinstancerc
+              printf \"2\n\" | mydbinstance.sh --create ci56
+              mydbinstance.sh --initialize_56 ci56
+              mydbinstance.sh --start ci56
+              /var/tmp/mysqlbin/\$VER/bin/mysql --defaults-file=/var/tmp/mydb/ci56/ci56.cnf -uroot -N -e \"SELECT VERSION();\"
+              mydbinstance.sh --stop ci56
+              mydbinstance.sh --destroy ci56
+            '"
