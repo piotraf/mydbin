@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Write Containerfile on citest01
         run: |
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'mkdir -p ~/mysqlrun && printf "%s\n" "FROM ubuntu:22.04" "ENV DEBIAN_FRONTEND=noninteractive" "RUN apt-get update && apt-get install -y libaio1 libncurses5 libtinfo5 libnuma1 zlib1g libssl3 xz-utils perl && rm -rf /var/lib/apt/lists/*" > ~/mysqlrun/Containerfile && cat ~/mysqlrun/Containerfile'
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP 'mkdir -p ~/mysqlrun && printf "%s\n" "FROM ubuntu:22.04" "ENV DEBIAN_FRONTEND=noninteractive" "RUN apt-get update && apt-get install -y libaio1 libncurses5 libtinfo5 libnuma1 zlib1g libssl3 xz-utils perl sudo && rm -rf /var/lib/apt/lists/* && useradd -m -u 1000 -s /bin/bash user01 && echo \"user01 ALL=(ALL) NOPASSWD:ALL\" > /etc/sudoers.d/user01 && chmod 440 /etc/sudoers.d/user01" "USER user01" "WORKDIR /home/user01" > ~/mysqlrun/Containerfile && cat ~/mysqlrun/Containerfile'
 
       - name: Build image
         run: |
@@ -22,4 +22,4 @@ jobs:
 
       - name: Verify
         run: |
-          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman run --rm $IMAGE perl -MFile::Copy -MSys::Hostname -MData::Dumper -e 'print \"perl-ok\n\"'"
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP "podman run --rm $IMAGE bash -c 'whoami; id -un; perl -MFile::Copy -MSys::Hostname -MData::Dumper -e 1 && echo perl-ok'"

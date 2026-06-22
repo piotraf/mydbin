@@ -22,9 +22,8 @@ jobs:
       - name: Run 5.6 cycle in container
         run: |
           ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
-            "podman run --rm -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE bash -c '
+            "podman run --rm -v /ci:/ci:ro -v /tmp/mydbinstance.sh:/usr/local/bin/mydbinstance.sh:ro $IMAGE bash -lc '
               set -euo pipefail
-              export USER=runner
               MYDB=\"bash /usr/local/bin/mydbinstance.sh\"
               VER=mysql-5.6.51-linux-glibc2.12-x86_64
               mkdir -p /var/tmp/mysqlbin /var/tmp/mydb ~/.mydbinstancerc.d
