@@ -1,0 +1,22 @@
+name: Hello /tmp
+
+on:
+  workflow_dispatch:
+
+env:
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+
+jobs:
+  hello:
+    runs-on: [self-hosted]
+    steps:
+      - name: Write file on ghr01 (the runner)
+        run: |
+          echo "hello from ghr01 run ${GITHUB_RUN_ID} at $(date -u +%FT%TZ)" > /tmp/ci-hello-ghr01.txt
+          cat /tmp/ci-hello-ghr01.txt
+
+      - name: Write file on citest01 (over ssh)
+        run: |
+          ssh -i "${CI_KEY}" -o StrictHostKeyChecking=no ci@${TEST_IP} \
+            'echo "hello from citest01 run '"${GITHUB_RUN_ID}"' at $(date -u +%FT%TZ)" > /tmp/ci-hello-citest01.txt; cat /tmp/ci-hello-citest01.txt'
