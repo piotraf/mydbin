@@ -29,13 +29,13 @@ jobs:
           ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
             "podman run --rm -v /ci:/ci:ro -v /tmp/mydbin.sh:/tmp/mydbin.sh:ro $IMAGE bash -lc '
               set -euo pipefail
-              mkdir -p ~/bin ~/dbtests ~/.mydbinrc.d ~/mysqlbin
+              mkdir -p ~/bin ~/dbtests ~/mysqlbin
               install -m 0755 /tmp/mydbin.sh ~/bin/mydbin.sh
               MYDB=~/bin/mydbin.sh
               VER=mysql-5.6.51-linux-glibc2.12-x86_64
               tar xf /ci/mysql/\$VER.tar.gz -C ~/mysqlbin
               ln -sfn \$HOME/mysqlbin/\$VER \$HOME/mysqlbin/mysql-5.6
-              printf \"MYROOTPATH=\$HOME/dbtests\nMYBINPATH=\$HOME/mysqlbin\n\" > ~/.mydbinrc
+              printf \"\$HOME/dbtests\n\$HOME/mysqlbin\n\" | \$MYDB --initialize_config
               printf \"2\n\" | \$MYDB --create ci56
               \$MYDB --initialize_56 ci56
               \$MYDB --start ci56
