@@ -1,5 +1,5 @@
 #!/bin/bash
-# mydbinstance.sh– prototype for future `mydbin` CLI
+# mydbin.sh – prototype for future `mydbin` CLI
 # EXPERIMENTAL / WIP – internal script, interface may change
 # Author: Piotr Fratczak <piotr4f@gmail.com>
 #
@@ -25,8 +25,8 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-CONFIG_FILE=~/.mydbinstancerc
-INSTANCE_DIR=~/.mydbinstancerc.d
+CONFIG_FILE=~/.mydbinrc
+INSTANCE_DIR=~/.mydbinrc.d
 MYSQL_VERSIONS=("mysql-5.5.62-linux-glibc2.12-x86_64" "mysql-5.6.51-linux-glibc2.12-x86_64" "mysql-5.7.44-linux-glibc2.12-x86_64" "mysql-8.0.40-linux-glibc2.28-x86_64" "mysql-8.4.3-linux-glibc2.28-x86_64")
 
 # Utility function: Print error and exit
