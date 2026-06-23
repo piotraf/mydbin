@@ -27,6 +27,7 @@
 
 CONFIG_FILE=~/.mydbinrc
 INSTANCE_DIR=~/.mydbinrc.d
+# This will need to be chnaged to what in facy on user's premisses will be an aliases to the binary rehgardless it's directory full name: mysql-5.5, mysql-5.6, mysql-5.7, mysql-8.0, mysql-8.4, mysql-9.7 
 MYSQL_VERSIONS=("mysql-5.5.62-linux-glibc2.12-x86_64" "mysql-5.6.51-linux-glibc2.12-x86_64" "mysql-5.7.44-linux-glibc2.12-x86_64" "mysql-8.0.40-linux-glibc2.28-x86_64" "mysql-8.4.3-linux-glibc2.28-x86_64")
 
 # Utility function: Print error and exit
