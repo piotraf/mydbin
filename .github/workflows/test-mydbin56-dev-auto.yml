@@ -7,7 +7,6 @@ on:
       - dev
     paths:
       - 'scripts/mydbin.sh'
-      - '.github/workflows/test-mydbin56-dev-auto.yml'
 
 env:
   TEST_IP: "192.168.40.20"
@@ -35,12 +34,12 @@ jobs:
               MYDB=~/bin/mydbin.sh
               VER=mysql-5.6.51-linux-glibc2.12-x86_64
               tar xf /ci/mysql/\$VER.tar.gz -C ~/mysqlbin
-              ln -sfn \$HOME/mysqlbin/\$VER \$HOME/dbtests/mysql-5.6
+              ln -sfn \$HOME/mysqlbin/\$VER \$HOME/mysqlbin/mysql-5.6
               printf \"MYROOTPATH=\$HOME/dbtests\nMYBINPATH=\$HOME/mysqlbin\n\" > ~/.mydbinrc
               printf \"2\n\" | \$MYDB --create ci56
               \$MYDB --initialize_56 ci56
               \$MYDB --start ci56
-              ~/dbtests/mysql-5.6/bin/mysql --defaults-file=\$HOME/dbtests/ci56/ci56.cnf -uroot -N -e \"SELECT VERSION();\"
+              ~/mysqlbin/mysql-5.6/bin/mysql --defaults-file=\$HOME/dbtests/ci56/ci56.cnf -uroot -N -e \"SELECT VERSION();\"
               \$MYDB --stop ci56
               \$MYDB --destroy ci56
             '"
