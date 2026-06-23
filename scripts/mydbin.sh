@@ -27,8 +27,7 @@
 
 CONFIG_FILE=~/.mydbinrc
 INSTANCE_DIR=~/.mydbinrc.d
-# This will need to be chnaged to what in facy on user's premisses will be an aliases to the binary rehgardless it's directory full name: mysql-5.5, mysql-5.6, mysql-5.7, mysql-8.0, mysql-8.4, mysql-9.7 
-MYSQL_VERSIONS=("mysql-5.5.62-linux-glibc2.12-x86_64" "mysql-5.6.51-linux-glibc2.12-x86_64" "mysql-5.7.44-linux-glibc2.12-x86_64" "mysql-8.0.40-linux-glibc2.28-x86_64" "mysql-8.4.3-linux-glibc2.28-x86_64")
+MYSQL_VERSIONS=("mysql-5.5" "mysql-5.6" "mysql-5.7" "mysql-8.0" "mysql-8.4" "mysql-9.7")
 
 # Utility function: Print error and exit
 error_exit() {
@@ -63,14 +62,9 @@ initialize_config() {
     read -p "Enter root path [~/testdir]: " MYROOTPATH
     MYROOTPATH=${MYROOTPATH:-~/testdir}
 
-    read -p "Enter MySQL binary path [/opt/mysqlbin]: " MYBINPATH
-    MYBINPATH=${MYBINPATH:-/opt/mysqlbin}
-
     [[ ! -d $MYROOTPATH ]] && mkdir -p "$MYROOTPATH" || echo "Directory $MYROOTPATH exists."
-    [[ ! -d $MYBINPATH ]] && error_exit "Binary path $MYBINPATH does not exist."
 
     echo "MYROOTPATH=$MYROOTPATH" > $CONFIG_FILE
-    echo "MYBINPATH=$MYBINPATH" >> $CONFIG_FILE
 
     mkdir -p $INSTANCE_DIR
     echo "Configuration saved to $CONFIG_FILE"
@@ -113,7 +107,7 @@ create_instance() {
 
     echo "Select MySQL version:"
     select version in "${MYSQL_VERSIONS[@]}"; do
-        MYBINVERPATH=$MYBINPATH/$version
+        MYBINVERPATH=$MYROOTPATH/$version
         [[ -d $MYBINVERPATH ]] && break || echo "Invalid choice, try again."
     done
 
