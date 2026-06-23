@@ -1,7 +1,7 @@
 # Roadmap
 
-This roadmap reflects the actual state of `scripts/mydbinstance.sh` and the
-planned evolution toward a mature `mydbin` CLI.
+This roadmap reflects the actual state of `scripts/mydbin.sh` and the planned
+evolution toward a mature `mydbin` CLI.
 
 ---
 
@@ -15,19 +15,18 @@ planned evolution toward a mature `mydbin` CLI.
 
 ---
 
-## v0.2 — Introduce `mydbin` CLI front-end
-- Add `bin/mydbin` wrapper
-- Map subcommands to current flags
-- Keep all logic in `scripts/mydbinstance.sh`
+## v0.2 — Stabilize `mydbin` CLI entrypoint
+- Keep the current script name as `scripts/mydbin.sh`
+- Map current flags toward stable subcommands
 - Provide unified help output (`mydbin help`)
-- Zero breaking changes
+- Preserve compatibility with existing prototype flags during transition
 
 ---
 
 ## v0.3 — Version manager
 - Standardize version paths under `~/.mydbin/versions`
-- Allow “registering” installed MySQL/MariaDB
-- Add `mydbin versions`  
+- Allow registering installed MySQL/MariaDB binaries
+- Add `mydbin versions`
 - Optional future: download verified binaries (opt-in)
 
 ---
@@ -37,7 +36,7 @@ planned evolution toward a mature `mydbin` CLI.
 - Commands:
   - `mydbin env use <instance>`
   - `mydbin env list`
-- Improve metadata tracking (instance.json)
+- Improve metadata tracking (`instance.json`)
 
 ---
 
