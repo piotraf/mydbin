@@ -22,10 +22,10 @@ introduce a stable `mydbin` CLI with subcommands.
 - Stores configuration in the user’s home directory:
   - `~/.mydbinrc`
   - `~/.mydbinrc.d/<instance>rc`
-- Supports multiple MySQL versions (5.5 → 8.4) via user-supplied binaries
+- Supports multiple MySQL versions (5.5 → 9.7) via user-supplied binaries
 - Provides lifecycle operations for isolated instances:
   - create
-  - initialize (5.5 / 5.6 / 5.7+ variants)
+  - initialize (5.5 / 5.6 / 5.7 / 8.0 / 8.4 LTS / 9.7 LTS variants)
   - start
   - stop
   - destroy
