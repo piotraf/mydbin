@@ -1,5 +1,5 @@
 #!/bin/bash
-# mydbin.sh – prototype for future `mydbin` CLI
+# mydbin.sh CLI
 # EXPERIMENTAL / WIP – internal script, interface may change
 # Author: Piotr Fratczak <piotr4f@gmail.com>
 #
