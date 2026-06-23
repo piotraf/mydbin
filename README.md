@@ -43,11 +43,42 @@ Each instance has its own:
 
 ## Quick start
 
+### Obtain the current script
+
+Download the current development version from `main`:
+
+```bash
+curl -fL -o mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/main/scripts/mydbin.sh
+```
+
+```bash
+wget -O mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/main/scripts/mydbin.sh
+```
+
+Download a tag-pinned version:
+
+```bash
+curl -fL -o mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/<tag>/scripts/mydbin.sh
+```
+
+```bash
+wget -O mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/<tag>/scripts/mydbin.sh
+```
+
+Clone the repository instead:
+
+```bash
+git clone https://github.com/piotraf/mydbin.git
+cd mydbin
+```
+
+### Initialize local configuration
+
 ```bash
 chmod +x mydbin.sh
 
 # First-time configuration
-mydbin.sh --initialize_config
+./mydbin.sh --initialize_config
 ```
 
 You will be asked for:
@@ -56,22 +87,24 @@ You will be asked for:
 
 ```bash
 # List all instances
-scripts/mydbin.sh --list
+./mydbin.sh --list
 
 # Create a new instance
-scripts/mydbin.sh --create <name>
+./mydbin.sh --create <name>
 
 # Initialize data directory (>=5.7)
-scripts/mydbin.sh --initialize <name>
+./mydbin.sh --initialize <name>
 
 # Initialize for old specific versions
-scripts/mydbin.sh --initialize_55 <name>
-scripts/mydbin.sh --initialize_56 <name>
+./mydbin.sh --initialize_55 <name>
+./mydbin.sh --initialize_56 <name>
 
 # Start / stop
-scripts/mydbin.sh --start <name>
-scripts/mydbin.sh --stop <name>
+./mydbin.sh --start <name>
+./mydbin.sh --stop <name>
 
 # Destroy (remove data + rc)
-scripts/mydbin.sh --destroy <name>
+./mydbin.sh --destroy <name>
 ```
+
+When using a cloned repository directly, run `scripts/mydbin.sh` instead of `./mydbin.sh`.
