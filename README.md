@@ -12,7 +12,7 @@ started, stopped and destroyed independently, with all state stored under the
 user’s home directory.
 
 Current implementation is a prototype Bash script:
-`scripts/mydbinstance.sh` (marked EXPERIMENTAL / WIP). Future releases will
+`scripts/mydbin.sh` (marked EXPERIMENTAL / WIP). Future releases will
 introduce a stable `mydbin` CLI with subcommands.
 
 ---
@@ -20,8 +20,8 @@ introduce a stable `mydbin` CLI with subcommands.
 ## Current capabilities (prototype)
 
 - Stores configuration in the user’s home directory:
-  - `~/.mydbinstancerc`
-  - `~/.mydbinstancerc.d/<instance>rc`
+  - `~/.mydbinrc`
+  - `~/.mydbinrc.d/<instance>rc`
 - Supports multiple MySQL versions (5.5 → 8.4) via user-supplied binaries
 - Provides lifecycle operations for isolated instances:
   - create
@@ -32,44 +32,46 @@ introduce a stable `mydbin` CLI with subcommands.
   - list
 
 Each instance has its own:
-- datadir  
-- binlogs  
-- socket  
-- pid file  
-- temporary directory  
-- configuration file  
+- datadir
+- binlogs
+- socket
+- pid file
+- temporary directory
+- configuration file
 
 ---
 
 ## Quick start
 
 ```bash
-chmod +x scripts/mydbinstance.sh
+chmod +x scripts/mydbin.sh
 
 # First-time configuration
-scripts/mydbinstance.sh --initialize_config
+scripts/mydbin.sh --initialize_config
 ```
+
 You will be asked for:
-	•	instance root (default: ~/testdir)
-	•	MySQL binaries location (default: /opt/mysqlbin)
-```
+- instance root (default: `~/testdir`)
+- MySQL binaries location (default: `/opt/mysqlbin`)
+
+```bash
 # List all instances
-scripts/mydbinstance.sh --list
+scripts/mydbin.sh --list
 
 # Create a new instance
-scripts/mydbinstance.sh --create <name>
+scripts/mydbin.sh --create <name>
 
 # Initialize data directory (>=5.7)
-scripts/mydbinstance.sh --initialize <name>
+scripts/mydbin.sh --initialize <name>
 
 # Initialize for old specific versions
-scripts/mydbinstance.sh --initialize_55 <name>
-scripts/mydbinstance.sh --initialize_56 <name>
+scripts/mydbin.sh --initialize_55 <name>
+scripts/mydbin.sh --initialize_56 <name>
 
 # Start / stop
-scripts/mydbinstance.sh --start <name>
-scripts/mydbinstance.sh --stop <name>
+scripts/mydbin.sh --start <name>
+scripts/mydbin.sh --stop <name>
 
 # Destroy (remove data + rc)
-scripts/mydbinstance.sh --destroy <name>
+scripts/mydbin.sh --destroy <name>
 ```
