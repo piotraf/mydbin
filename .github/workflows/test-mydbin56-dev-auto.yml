@@ -1,0 +1,46 @@
+name: Test mydbin 5.6 dev auto
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'scripts/mydbin.sh'
+      - '.github/workflows/test-mydbin56-dev-auto.yml'
+
+env:
+  TEST_IP: "192.168.40.20"
+  CI_KEY: "/opt/actions-runner/.ssh/ci_citest"
+  IMAGE: "mysql-runner:base"
+
+jobs:
+  test56:
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy mydbin.sh to citest01
+        run: |
+          scp -i "$CI_KEY" -o StrictHostKeyChecking=no scripts/mydbin.sh ci@$TEST_IP:/tmp/mydbin.sh
+
+      - name: Run 5.6 cycle in container
+        run: |
+          ssh -i "$CI_KEY" -o StrictHostKeyChecking=no ci@$TEST_IP \
+            "podman run --rm -v /ci:/ci:ro -v /tmp/mydbin.sh:/tmp/mydbin.sh:ro $IMAGE bash -lc '
+              set -euo pipefail
+              mkdir -p ~/bin ~/dbtests ~/.mydbinrc.d
+              install -m 0755 /tmp/mydbin.sh ~/bin/mydbin.sh
+              MYDB=~/bin/mydbin.sh
+              VER=mysql-5.6.51-linux-glibc2.12-x86_64
+              mkdir -p ~/mysqlbin
+              tar xf /ci/mysql/\$VER.tar.gz -C ~/mysqlbin
+              printf \"MYROOTPATH=\$HOME/dbtests\nMYBINPATH=\$HOME/mysqlbin\n\" > ~/.mydbinrc
+              printf \"2\n\" | \$MYDB --create ci56
+              \$MYDB --initialize_56 ci56
+              \$MYDB --start ci56
+              ~/mysqlbin/\$VER/bin/mysql --defaults-file=\$HOME/dbtests/ci56/ci56.cnf -uroot -N -e \"SELECT VERSION();\"
+              \$MYDB --stop ci56
+              \$MYDB --destroy ci56
+            '"
