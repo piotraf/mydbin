@@ -58,24 +58,24 @@ It fills a gap in developer tooling: **no existing tool provides â€œpyenv-styleâ
 ---
 
 ## Traction & Roadmap
-**Prototype:**  
-`scripts/mydbinstance.sh` implements full instance lifecycle.
+**Prototype:**
+`scripts/mydbin.sh` implements full instance lifecycle.
 
 **Next milestones:**
-- v0.1: Document and harden current script  
-- v0.2: Introduce `mydbin` front-end CLI  
-- v0.3: Version manager  
-- v0.4: Environments  
-- v0.5: CI-ready usage  
-- v1.0: Stable CLI contract  
+- v0.1: Document and harden current script
+- v0.2: Stabilize `mydbin` CLI entrypoint
+- v0.3: Version manager
+- v0.4: Environments
+- v0.5: CI-ready usage
+- v1.0: Stable CLI contract
 
 ---
 
 ## Long-term potential
-- Verified binary distribution  
-- Developer experience enhancements  
-- Team collaboration features  
-- Enterprise policies and audit  
-- Commercial support  
+- Verified binary distribution
+- Developer experience enhancements
+- Team collaboration features
+- Enterprise policies and audit
+- Commercial support
 
 mydbin begins as a small, powerful CLI and grows into a full developer platform.
