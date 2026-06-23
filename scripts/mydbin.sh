@@ -27,8 +27,7 @@
 
 CONFIG_FILE=~/.mydbinrc
 INSTANCE_DIR=~/.mydbinrc.d
-MYSQL_VERSIONS=("mysql-5.5.62-linux-glibc2.12-x86_64" "mysql-5.6.51-linux-glibc2.12-x86_64" "mysql-5.7.44-linux-glibc2.12-x86_64" "mysql-8.0.40-linux-glibc2.28-x86_64" "mysql-8.4.3-linux-glibc2.28-x86_64")
-
+MYSQL_VERSIONS=("mysql-5.5.62-linux-glibc2.12-x86_64" "mysql-5.6.51-linux-glibc2.12-x86_64" "mysql-5.7.44-linux-glibc2.12-x86_64" "mysql-8.0.40-linux-glibc2.28-x86_64" "mysql-8.4.3-linux-glibc2.28-x86_64" "mysql-8.0.46-linux-glibc2.28-x86_64" "mysql-8.4.10-linux-glibc2.28-x86_64-minimal" "mysql-8.4.10-linux-glibc2.28-x86_64" "mysql-9.7.1-linux-glibc2.28-x86_64-minimal" "mysql-9.7.1-linux-glibc2.28-x86_64")
 # Utility function: Print error and exit
 error_exit() {
     echo "[ERROR] $1" >&2
