@@ -65,11 +65,11 @@ curl -fL -o mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/<tag>/scr
 wget -O mydbin.sh https://raw.githubusercontent.com/piotraf/mydbin/<tag>/scripts/mydbin.sh
 ```
 
-Clone the repository instead:
+Clone the repository and enter the script directory:
 
 ```bash
 git clone https://github.com/piotraf/mydbin.git
-cd mydbin
+cd mydbin/scripts
 ```
 
 ### Initialize local configuration
@@ -106,5 +106,3 @@ You will be asked for:
 # Destroy (remove data + rc)
 ./mydbin.sh --destroy <name>
 ```
-
-When using a cloned repository directly, run `scripts/mydbin.sh` instead of `./mydbin.sh`.
