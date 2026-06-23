@@ -44,10 +44,10 @@ Each instance has its own:
 ## Quick start
 
 ```bash
-chmod +x scripts/mydbin.sh
+chmod +x mydbin.sh
 
 # First-time configuration
-scripts/mydbin.sh --initialize_config
+mydbin.sh --initialize_config
 ```
 
 You will be asked for:
