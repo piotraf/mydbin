@@ -1,8 +1,6 @@
 name: Test mydbin 5.6
 
 on:
-  push:
-    branches: [dev]
   workflow_dispatch:
 
 env:
