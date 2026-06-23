@@ -62,9 +62,14 @@ initialize_config() {
     read -p "Enter root path [~/testdir]: " MYROOTPATH
     MYROOTPATH=${MYROOTPATH:-~/testdir}
 
+    read -p "Enter MySQL binary path [/opt/mysqlbin]: " MYBINPATH
+    MYBINPATH=${MYBINPATH:-/opt/mysqlbin}
+
     [[ ! -d $MYROOTPATH ]] && mkdir -p "$MYROOTPATH" || echo "Directory $MYROOTPATH exists."
+    [[ ! -d $MYBINPATH ]] && error_exit "Binary path $MYBINPATH does not exist."
 
     echo "MYROOTPATH=$MYROOTPATH" > $CONFIG_FILE
+    echo "MYBINPATH=$MYBINPATH" >> $CONFIG_FILE
 
     mkdir -p $INSTANCE_DIR
     echo "Configuration saved to $CONFIG_FILE"
@@ -107,7 +112,7 @@ create_instance() {
 
     echo "Select MySQL version:"
     select version in "${MYSQL_VERSIONS[@]}"; do
-        MYBINVERPATH=$MYROOTPATH/$version
+        MYBINVERPATH=$MYBINPATH/$version
         [[ -d $MYBINVERPATH ]] && break || echo "Invalid choice, try again."
     done
 
