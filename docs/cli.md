@@ -2,18 +2,18 @@
 
 This document describes:
 
-1. The **current** CLI implemented in `scripts/mydbinstance.sh`
+1. The **current** CLI implemented in `scripts/mydbin.sh`
 2. The **planned** unified `mydbin` CLI
-3. A migration map from prototype → stable interface
+3. A migration map from prototype flags to stable subcommands
 
 ---
 
-## 1. Current prototype: `scripts/mydbinstance.sh`
+## 1. Current prototype: `scripts/mydbin.sh`
 
 The script uses a single entrypoint with long options:
 
 | Action | Flag | Backed by functions |
-|--------|-------|-----------------------|
+|--------|------|---------------------|
 | Initialize global config | `--initialize_config` | `initialize_config` |
 | List instances | `--list` | `list_instances` |
 | Create instance | `--create <name>` | `create_instance` |
@@ -26,8 +26,8 @@ The script uses a single entrypoint with long options:
 
 Each action loads:
 
-- `~/.mydbinstancerc` (global config)
-- `~/.mydbinstancerc.d/<instance>rc` (instance config)
+- `~/.mydbinrc` (global config)
+- `~/.mydbinrc.d/<instance>rc` (instance config)
 - `MYBINVERPATH` and `MYCNF` per instance
 
 ---
@@ -35,7 +35,11 @@ Each action loads:
 ## 2. Planned final CLI: `mydbin`
 
 The stable `mydbin` CLI will use subcommands, not flags:
-mydbin  [options]
+
+```text
+mydbin <subcommand> [options]
+```
+
 Core subcommands:
 
 | Subcommand | Description |
@@ -59,7 +63,7 @@ This structure mirrors tools developers already know:
 
 ---
 
-## 3. Migration plan (prototype → `mydbin`)
+## 3. Migration plan (prototype flags → `mydbin`)
 
 | Prototype flag | New `mydbin` subcommand |
 |----------------|--------------------------|
@@ -77,10 +81,8 @@ This structure mirrors tools developers already know:
 
 ## 4. Implementation strategy
 
-1. Keep `mydbinstance.sh` as **internal implementation logic**.
-2. Introduce `bin/mydbin` (small wrapper script) that:
-   - parses subcommands
-   - maps them to prototype functions
+1. Keep `scripts/mydbin.sh` as the current prototype implementation.
+2. Introduce a stable `mydbin` command entrypoint when the interface is ready.
 3. Gradually migrate code into reusable shell libraries in `lib/`.
 
-This ensures **zero breakage** while turning the prototype into a **real CLI tool**.
+This keeps the prototype usable while turning it into a stable CLI tool.
