@@ -65,8 +65,8 @@ initialize_config() {
     read -p "Enter MySQL binary path [/opt/mysqlbin]: " MYBINPATH
     MYBINPATH=${MYBINPATH:-/opt/mysqlbin}
 
-    [[ ! -d "$MYROOTPATH" ]] && error_exit "Root path $MYROOTPATH does not exist."
-    [[ ! -d "$MYBINPATH" ]] && error_exit "Binary path $MYBINPATH does not exist."
+    [[ ! -d $MYROOTPATH ]] && mkdir -p "$MYROOTPATH" || echo "Directory $MYROOTPATH exists."
+    [[ ! -d $MYBINPATH ]] && error_exit "Binary path $MYBINPATH does not exist."
 
     echo "MYROOTPATH=$MYROOTPATH" > $CONFIG_FILE
     echo "MYBINPATH=$MYBINPATH" >> $CONFIG_FILE
